@@ -13,16 +13,16 @@ struct Record {
     std::string day;   // 游戏日期
 };
 
-class game;
+class Game;
 
 // 游戏排行榜
-class gamestats {
+class GameStats {
    private:
     std::vector<Record> records;  // 记录智能数组
     int count;                    // 记录实际人数
 
     // 构造初始统计信息
-    gamestats() : records(0), count(0) {}
+    GameStats() : records(0), count(0) {}
 
     // records数组排序
     void sort_records();
@@ -34,6 +34,6 @@ class gamestats {
     // 输出记录
     void print_record() const;
 
-    friend class game;  // 声明game类为友元
+    friend class Game;  // 声明Game类为友元
 };
 #endif

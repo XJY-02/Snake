@@ -1,15 +1,13 @@
 #include <iostream>
 
-#include "game.h"
-#include "gamestats.h"
+#include "Game.h"
+#include "GameStats.h"
 
 using namespace std;
 
 int main() {
-    game game;
-    
-    game.start();
-
+    Game game;
+    game.enter_menu();
     cin.get();
     return 0;
 }
