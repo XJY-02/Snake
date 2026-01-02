@@ -72,9 +72,19 @@ void GameSetting::set_snack_speed() {
     snack_speed = answer;
 };
 
-void GameSetting::set_allow_through_bound() { allow_through_bound = !allow_through_bound; };
+void GameSetting::set_allow_through_bound() {
+    if (!allow_through_bound && allow_through_body) {
+        cout << "穿墙与穿身体不能同时启用!" << endl;
+    } else
+        allow_through_bound = !allow_through_bound;
+};
 
-void GameSetting::set_allow_through_body() { allow_through_body = !allow_through_body; };
+void GameSetting::set_allow_through_body() {
+    if (allow_through_bound && !allow_through_body) {
+        cout << "穿墙与穿身体不能同时启用!" << endl;
+    } else
+        allow_through_body = !allow_through_body;
+};
 
 void GameSetting::set_food_quantity() {
     cout << "更改食物同时存在数量为(最小为1): ";

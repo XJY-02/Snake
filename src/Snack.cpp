@@ -47,7 +47,7 @@ pair<int, int> Snack::get_new_head_position(const Direction& direction) {
 
 
 // 移动
-void Snack::move(pair<int, int> new_head_position, const bool& eat_food) {
+void Snack::move_and_may_grow(pair<int, int> new_head_position, const bool& eat_food) {
     // 蛇头入队列
     snack_body.push_front(new_head_position);
 

@@ -13,7 +13,10 @@ class Game;
 enum class Entity : int;
 enum class Direction : int;  // 方向枚举
 
-#define SNACK_SHAPE "██"
+#define SNACK_SHAPE "▓▓"
+#define SNACK_HEAD_SHAPE "██"
+#define SNACK_TAIL_SHAPE "▒▒"
+
 // 蛇
 class Snack {
    private:
@@ -28,7 +31,7 @@ class Snack {
     std::pair<int, int> get_new_head_position(const Direction& direction);
 
     // 移动
-    void move(std::pair<int, int> new_head_position, const bool& grow);
+    void move_and_may_grow(std::pair<int, int> new_head_position, const bool& grow);
 
 
     // 构造函数

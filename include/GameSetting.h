@@ -17,7 +17,7 @@ class GameSetting {
 
     GameSetting()
         : map_size(20),
-          snack_speed(5),
+          snack_speed(70),
           allow_through_bound(true),
           allow_through_body(false),
           food_quantity(1),

@@ -18,12 +18,12 @@ struct Record {
 };
 
 class Game;
+class GameBoard;
 
 // 游戏统计信息
 class GameStats {
    private:
     int current_score;            // 本局得分
-    int current_snack_len;        // 本局蛇长度
     float current_game_time;      // 本局游戏耗时
     std::string game_start_time;  // 本局开始时间
 
@@ -53,6 +53,8 @@ class GameStats {
     // 打印对局排行榜
     void print_record() const;
 
-    friend class Game;  // 声明Game类为友元
+    friend class Game;
+    friend class GameBoard;
 };
+
 #endif

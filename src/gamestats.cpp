@@ -1,6 +1,7 @@
 #include "GameStats.h"
 
 #include <algorithm>
+#include <iomanip>  
 #include <iostream>
 #include <string>
 
@@ -20,7 +21,6 @@ bool Record::operator==(const Record& other_record) {
 // 初始化对局统计信息
 void GameStats::ini_game_stats() {
     current_score = 0;
-    current_snack_len = 3;
     current_game_time = 0.0;
     game_start_time = get_current_time();
 }
@@ -80,7 +80,7 @@ void GameStats::print_record() const {
     cout << "排名\t\t名字\t\t得分\t\t时间\t\t日期" << endl;
     int rank = 1;
     for (Record record : records) {
-        cout << rank++ << "\t\t" << record.name << "\t\t" << record.score << "\t\t" << record.game_time << "s\t\t"
-             << record.date_time << endl;
+        cout << rank++ << "\t\t" << record.name << "\t\t" << record.score << "\t\t" << fixed << setprecision(1)
+             << record.game_time << "s\t\t" << record.date_time << endl;
     }
 }

@@ -12,8 +12,10 @@
 #define GROUND_SHAPE "  "
 
 class Game;
+class GameStats;
 
-enum class Entity : int;
+// 打印种类
+enum class Entity : int { empty = 0, snack, food, snack_head, snack_tail };
 
 // 游戏版
 class GameBoard {
@@ -39,7 +41,7 @@ class GameBoard {
     bool is_full(const Snack& snack);
 
     // 显示游戏版
-    void print(const Snack& snack, const Food& food);
+    void print(const Snack& snack, const Food& food, const GameStats& gamestats);
 
     friend class Game;
     friend class Snack;
