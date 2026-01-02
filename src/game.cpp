@@ -1,20 +1,18 @@
 #include "Game.h"
 
-#include <chrono>
+#include <conio.h>  // Windows 专用
+
+#include <chrono>  // 时间库
 #include <cstdlib>
 #include <iostream>
 #include <random>
+#include <thread>  // 线程库
 
 #include "Food.h"
 #include "GameSetting.h"
 #include "GameStats.h"
 #include "Input.h"
 #include "Snack.h"
-
-#define SNACK_SHAPE 'S'
-#define FOOD_SHAPE 'F'
-#define WALL_SHAPE 'X'
-#define GROUND_SHAPE 'O'
 
 using namespace std;
 
@@ -71,7 +69,7 @@ void Game::enter_menu() {
                     stats.ini_game_stats();
 
                     // 游戏开始
-                    //  game_start(gameboard, snack, food);
+                    game_start(gameboard, snack, food);
 
                     // 游戏结束
                     game_over();
@@ -95,11 +93,69 @@ void Game::enter_menu() {
 }
 
 // 游戏对局主逻辑
-void Game::game_start(GameBoard& gameboard, Snack& snack, Food& food) {}
+void Game::game_start(GameBoard& gameboard, Snack& snack, Food& food) {
+    Direction current_direction = Direction::right;
+    while (true) {
+        // 打印界面
+        clearScreen();
+        gameboard.print(snack, food);
+
+        // 获取输入
+        char key;
+        if (_kbhit()) {      // 检查是否有按键
+            key = _getch();  // 获取按键（不等待）
+            switch (key) {
+                case 'w':
+                case 'W':
+                    if (current_direction != Direction::down) {
+                        current_direction = Direction::up;
+                    }
+                    break;
+                case 's':
+                case 'S':
+                    if (current_direction != Direction::up) {
+                        current_direction = Direction::down;
+                    }
+                    break;
+                case 'a':
+                case 'A':
+                    if (current_direction != Direction::right) {
+                        current_direction = Direction::left;
+                    }
+                    break;
+                case 'd':
+                case 'D':
+                    if (current_direction != Direction::left) {
+                        current_direction = Direction::right;
+                    }
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        // 数据处理
+        pair<int, int> new_head_position = snack.get_new_head_position(current_direction);
+        bool eat_food = false;
+        for (int i = 0; i < (int)food.foods.size(); i++) {
+            if (food.foods[i] == new_head_position) {
+                eat_food = true;
+                food.renew_food_i(snack, i);
+                break;
+            }
+        }
+        snack.move(new_head_position, eat_food);
+
+        // 延迟
+        int milliseconds_to_next_print = 1000 / snack.speed;
+        this_thread::sleep_for(chrono::milliseconds(milliseconds_to_next_print));
+    }
+}
 
 
 // 游戏对局结束
 void Game::game_over() {
+    clearScreen();
     // 生成本局记录
     Record current_game_record = {"Unknown", stats.current_score, stats.current_game_time, stats.game_start_time};
 

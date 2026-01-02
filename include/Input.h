@@ -18,7 +18,7 @@ void wait_enter();
 // Enter返回true，ESC返回false
 bool enter_or_esc();
 
-// 接收一个字符串
+// 接收一行字符串
 std::string get_a_string();
 
 // 返回当前时间字符串

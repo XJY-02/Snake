@@ -14,10 +14,10 @@ void GameSetting::change_setting() {
         clearScreen();
         cout << "设置选项: " << endl;
         cout << "1.地图大小: " << map_size << "×" << map_size << endl;
-        cout << "2.速度:  " << snack_speed << "步/s" << endl;
+        cout << "2.速度:  " << snack_speed << endl;
         cout << "3.穿墙: " << (allow_through_bound ? "√" : "×") << endl;
         cout << "4.穿身体: " << (allow_through_body ? "√" : "×") << endl;
-        cout << "5.食物同时存在个数: " << food_quantity << "生长/食物" << endl;
+        cout << "5.食物同时存在个数: " << food_quantity << "个" << endl;
         cout << "6.是否使用随机种子进行游戏: " << (use_random_seed ? "√" : "×") << endl;
         if (!use_random_seed) {
             cout << "7.固定种子:  " << seed << endl;
@@ -45,7 +45,7 @@ void GameSetting::change_setting() {
                 set_allow_through_body();
                 break;
             case 5:
-                set_food_utility();
+                set_food_quantity();
                 break;
             case 6:
                 set_use_random_seed();
@@ -76,7 +76,7 @@ void GameSetting::set_allow_through_bound() { allow_through_bound = !allow_throu
 
 void GameSetting::set_allow_through_body() { allow_through_body = !allow_through_body; };
 
-void GameSetting::set_food_utility() {
+void GameSetting::set_food_quantity() {
     cout << "更改食物同时存在数量为(最小为1): ";
     int answer = input_a_int(1, INT_MAX);
     food_quantity = answer;

@@ -6,6 +6,8 @@
 #include "GameSetting.h"
 #include "GameStats.h"
 
+enum class Direction : int { up = 0, down, left, right };  // 方向枚举
+
 // 游戏实例
 class Game {
    private:

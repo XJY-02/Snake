@@ -8,7 +8,7 @@ class Game;
 class GameSetting {
    private:
     int map_size;              // 地图大小
-    float snack_speed;         // 蛇速度，多少s走1步
+    int snack_speed;           // 蛇速度
     bool allow_through_bound;  // 是否运行穿墙
     bool allow_through_body;   // 是否允许穿过身体
     int food_quantity;         // 食物数量
@@ -16,9 +16,9 @@ class GameSetting {
     int seed;                  // 固定种子
 
     GameSetting()
-        : map_size(10),
-          snack_speed(1.0),
-          allow_through_bound(false),
+        : map_size(20),
+          snack_speed(5),
+          allow_through_bound(true),
           allow_through_body(false),
           food_quantity(1),
           use_random_seed(true),
@@ -29,7 +29,7 @@ class GameSetting {
     void set_snack_speed();
     void set_allow_through_bound();
     void set_allow_through_body();
-    void set_food_utility();
+    void set_food_quantity();
     void set_use_random_seed();
     void set_fixed_seed();
 

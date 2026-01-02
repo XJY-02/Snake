@@ -13,7 +13,8 @@ int input_a_int(const int& low, const int& high) {
     int answer;
     while (true) {
         cout << "请选择: ";
-        if (!(cin >> answer)) {  // 读取失败
+        // 读取失败
+        if (!(cin >> answer)) {
             cout << "无效输入" << endl;
             cin.clear();  // 清除错误标志
             cin.ignore(1000,
@@ -21,8 +22,8 @@ int input_a_int(const int& low, const int& high) {
             continue;
         }
         // 读取成功
-        cin.ignore(1000, '\n');  // 清理多余输入
-        if (answer < low || answer > high) {
+        cin.ignore(1000, '\n');               // 清理多余输入
+        if (answer < low || answer > high) {  // 输入越界
             cout << "越界输入" << endl;
             continue;
         }
@@ -52,7 +53,7 @@ void wait_enter() {
 // Enter返回true，ESC返回false
 bool enter_or_esc() {
     int key;
-    while ((key = _getch()) != 13 && (key = _getch()) != 27) {  // 按下的不是Enter也不是ESC
+    while ((key = _getch()) != 13 && key != 27) {  // 按下的不是Enter也不是ESC
         ;
     }
     if (key == 13) {  // 按下Enter
@@ -61,10 +62,10 @@ bool enter_or_esc() {
         return false;
 }
 
-// 接收一个字符串
+// 接收一行字符串
 string get_a_string() {
     string str;
-    cin >> str;
+    getline(cin, str);  // 读取整行,包含空格,读取并丢弃最后的换行符，不会留在缓冲区
     return str;
 }
 

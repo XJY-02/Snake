@@ -2,15 +2,19 @@
 #define FOOD_H
 
 
+#include <string>
 #include <utility>
 #include <vector>
 
 #include "Snack.h"
+
+#define FOOD_SHAPE "◎"
+
 // 食物
 class Food {
    private:
     int map_size;                            // 地图大小
-    char shape;                              // 形状
+    std::string shape;                       // 形状
     int food_quantity;                       // 食物数量
     std::vector<std::pair<int, int>> foods;  // 食物坐标
     int seed;                                // 随机种子
@@ -22,13 +26,13 @@ class Food {
     void renew_food_i(const Snack& snack, const int& i) { foods[i] = new_food_position(snack); }
 
     // 构造函数
-    Food(const Snack& snack, int map_size, char shape, int food_quantity, int seed)
+    Food(const Snack& snack, int map_size, const std::string& shape, int food_quantity, int seed)
         : map_size(map_size),
-          shape('F'),
+          shape(shape),
           food_quantity(food_quantity),
           foods(food_quantity, std::pair<int, int>()),
           seed(seed) {
-        for (auto food : foods) {
+        for (auto& food : foods) {
             food = new_food_position(snack);
         }
     }

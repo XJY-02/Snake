@@ -3,26 +3,36 @@
 
 
 #include <queue>
+#include <string>
 #include <utility>
+
 class GameBoard;
+class Food;
+class Game;
 
+enum class Entity : int;
+enum class Direction : int;  // 方向枚举
 
+#define SNACK_SHAPE "██"
 // 蛇
 class Snack {
    private:
     int map_size;                                // 地图边界大小
-    int speed;                                   // 速度（步/s）
+    int speed;                                   // 速度
     bool allow_through_bound;                    // 是否运行穿墙
     bool allow_through_body;                     // 是否允许穿过身体
-    char shape;                                  // 形状
+    std::string shape;                           // 形状
     std::deque<std::pair<int, int>> snack_body;  // 当前蛇的位置
 
+    // 获得新头位置
+    std::pair<int, int> get_new_head_position(const Direction& direction);
 
-    // 判断是否死亡
-    bool is_dead();
+    // 移动
+    void move(std::pair<int, int> new_head_position, const bool& grow);
+
 
     // 构造函数
-    Snack(int map_size, int snack_speed, bool allow_through_bound, bool allow_through_body, char shape)
+    Snack(int map_size, int snack_speed, bool allow_through_bound, bool allow_through_body, const std::string& shape)
         : map_size(map_size),
           speed(snack_speed),
           allow_through_bound(allow_through_bound),
