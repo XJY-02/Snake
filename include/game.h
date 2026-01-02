@@ -10,24 +10,24 @@
 class Game {
    private:
     bool is_running;      // 游戏中运行标志
-    GameStats stats;      // 游戏排行榜
-    GameSetting setting;  // 之后实现Gamesetting类
+    bool play_again;      // 再来一把标志
+    GameStats stats;      // 游戏统计信息
+    GameSetting setting;  // 游戏设置
 
-    // 清屏
-    void clearScreen();
 
     // 打印菜单
     void print_menu();
 
-    // 修改设置
-    void change_setting();
-
-    // 开始游戏
+    // 游戏对局主逻辑
     void game_start(GameBoard& gameboard, Snack& snack, Food& food);
+
+    // 游戏对局结束
+    void game_over();
+
 
    public:
     // 构造函数
-    Game() : is_running(0), stats(), setting() {}
+    Game() : is_running(0), play_again(false), stats(), setting() {}
 
     // 进入游戏菜单
     void enter_menu();

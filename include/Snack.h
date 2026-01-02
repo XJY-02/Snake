@@ -1,33 +1,35 @@
 #ifndef SNACK_H
 #define SNACK_H
 
+
+#include <queue>
+#include <utility>
+class GameBoard;
+
+
 // 蛇
 class Snack {
    private:
-    std::vector<std::vector<int>> current_position;  // 当前蛇的位置
-    int head_x, head_y;                              // 蛇头位置
-    int tail_x, tail_y;                              // 蛇尾位置
-    int speed;                                       // 速度（步/s）
-    char shape;                                      // 形状
-    bool alive;                                      // 存活
+    int map_size;                                // 地图边界大小
+    int speed;                                   // 速度（步/s）
+    bool allow_through_bound;                    // 是否运行穿墙
+    bool allow_through_body;                     // 是否允许穿过身体
+    char shape;                                  // 形状
+    std::deque<std::pair<int, int>> snack_body;  // 当前蛇的位置
 
-    // 重新生成蛇坐标
-    void update_XY(const GameBoard& gameboard);
 
-    // 将食物添加到游戏版
-    void merge_snack(GameBoard& gameboard);
-
-    // 修改形状
-    void change_speed(const int& new_speed) { speed = new_speed; }
-
-    // 修改形状
-    void change_shape(const char& new_shape) { shape = new_shape; }
-
-    // 修改食物效用
-    void die() { alive = false; }
+    // 判断是否死亡
+    bool is_dead();
 
     // 构造函数
-    Snack(const GameBoard& gameboard) : shape('■'), speed(2), alive(true) {}
+    Snack(int map_size, int snack_speed, bool allow_through_bound, bool allow_through_body, char shape)
+        : map_size(map_size),
+          speed(snack_speed),
+          allow_through_bound(allow_through_bound),
+          allow_through_body(allow_through_body),
+          shape(shape),
+          snack_body{{map_size / 2, map_size / 2}, {map_size / 2, map_size / 2 - 1}, {map_size / 2, map_size / 2 - 2}} {
+    }
 
     friend class GameBoard;
     friend class Food;

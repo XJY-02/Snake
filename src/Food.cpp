@@ -1,8 +1,34 @@
 #include "Food.h"
 
 #include <iostream>
-#include <vector>
+#include <random>
+#include <utility>
 
 using namespace std;
 
-typedef vector<vector<int>> map_arr;
+// 生成新食物的随机坐标
+std::pair<int, int> Food::new_food_position(const Snack& snack) {
+    mt19937 gen(seed);                                // 设置种子
+    uniform_int_distribution<int> dist(0, map_size);  // 设置随机范围
+    while (true) {
+        pair<int, int> new_position = {dist(gen), dist(gen)};  // 随机生成一个位置
+        bool valid = true;                                     // 设置合法标志
+        // 检查是否与蛇身体重合
+        for (auto snack_body : snack.snack_body) {
+            if (snack_body == new_position) {
+                valid = false;
+                continue;
+            }
+        }
+        // 检查是否与食物重合
+        for (auto food : foods) {
+            if (food == new_position) {
+                valid = false;
+                continue;
+            }
+        }
+        if (valid) {
+            return new_position;
+        }
+    }
+};

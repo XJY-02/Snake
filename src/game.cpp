@@ -1,7 +1,9 @@
 #include "Game.h"
 
+#include <chrono>
 #include <cstdlib>
 #include <iostream>
+#include <random>
 
 #include "Food.h"
 #include "GameSetting.h"
@@ -9,62 +11,23 @@
 #include "Input.h"
 #include "Snack.h"
 
+#define SNACK_SHAPE 'S'
+#define FOOD_SHAPE 'F'
+#define WALL_SHAPE 'X'
+#define GROUND_SHAPE 'O'
+
 using namespace std;
 
-// 清屏
-void Game::clearScreen() { system("cls"); }
 
 // 打印游戏菜单
 void Game::print_menu() {
     cout << "--------贪吃蛇--------\n"
          << "     1.开始游戏\n"
          << "     2.设置\n"
-         << "     3.排行榜\n"
+         << "     3.对局排行榜\n"
+         << "\n     0.退出\n"
          << "----------------------\n";
 }
-
-// 修改设置
-void Game::change_setting() {
-    bool finished = false;
-    while (!finished) {
-        cout << "设置选项: " << endl;
-        cout << "1.地图大小: " << setting.map_size << "格" << endl;
-        cout << "2.速度:  " << setting.snack_speed << "步/s" << endl;
-        cout << "3.穿墙: " << (setting.allow_through_bound ? "开" : "关") << endl;
-        cout << "4.穿身体: " << (setting.allow_through_body ? "开" : "关") << endl;
-        cout << "5.食物效用: " << setting.food_utility << "生长/食物" << endl;
-        cout << "6.返回" << endl;
-
-        int answer = input_a_int(1, 6);
-
-        switch (answer) {
-            case 1:
-                setting.set_map_size();
-                break;
-            case 2:
-                setting.set_snack_speed();
-                break;
-            case 3:
-                setting.set_allow_through_bound();
-                break;
-            case 4:
-                setting.set_allow_through_body();
-                break;
-            case 5:
-                setting.set_food_utility();
-                break;
-            case 6:
-                finished = true;
-                break;
-            default:
-                break;
-        }
-    }
-}
-
-
-// 游戏主逻辑
-void Game::game_start(GameBoard& gameboard, Snack& snack, Food& food) {}
 
 
 // 进入游戏菜单
@@ -73,20 +36,99 @@ void Game::enter_menu() {
 
     while (is_running) {
         clearScreen();
-        print_menu();
-        int menu_select = input_a_int(1, 3);
-        switch (menu_select) {
+        print_menu();  // 打印菜单
+
+        int menu_select = input_a_int(0, 3);  // 菜单选项选择
+
+        clearScreen();
+        switch (menu_select) {  // 进入选项
+            case 0:             // 退出
+                is_running = false;
+                break;
             case 1: {
-                // 注意：这里添加花括号
-                // 在局部作用域内创建对象
-                GameBoard gameboard(setting.map_size);
-                Snack snack;
-                Food food(setting.food_utility);
-                game_start(gameboard, snack, food);
+                // 选择开始游戏
+
+                // 设置随机种子
+                int seed;
+                if (setting.use_random_seed) {                       // 启用随机种子
+                    random_device rd;                                // 硬件随机数设备（如果可用）
+                    mt19937 gen(rd());                               // 使用Mersenne Twister引擎
+                    uniform_int_distribution<int> dist(0, INT_MAX);  // 均匀整数分布
+                    setting.seed = dist(gen);
+                }
+                seed = setting.seed;
+
+                //  创建游戏对象
+                GameBoard gameboard(setting.map_size, WALL_SHAPE, GROUND_SHAPE);
+
+                Snack snack(setting.map_size, setting.snack_speed, setting.allow_through_bound,
+                            setting.allow_through_body, SNACK_SHAPE);
+
+                Food food(snack, setting.map_size, FOOD_SHAPE, setting.food_quantity, seed);
+
+                do {
+                    // 初始化对局信息
+                    stats.ini_game_stats();
+
+                    // 游戏开始
+                    //  game_start(gameboard, snack, food);
+
+                    // 游戏结束
+                    game_over();
+
+                } while (play_again);  // 再来一把
+
                 break;
             }
+            case 2:  // 进入设置
+                setting.change_setting();
+                break;
+            case 3:  // 进入排行榜
+                stats.print_record();
+                std::cout << "\n按 ESC 键返回..." << std::endl;
+                wait_esc();
+                break;
             default:
                 break;
         }
     }
+}
+
+// 游戏对局主逻辑
+void Game::game_start(GameBoard& gameboard, Snack& snack, Food& food) {}
+
+
+// 游戏对局结束
+void Game::game_over() {
+    // 生成本局记录
+    Record current_game_record = {"Unknown", stats.current_score, stats.current_game_time, stats.game_start_time};
+
+    // 展示对局信息
+    cout << "--------对局信息汇总--------" << endl;
+    cout << "得分                   " << current_game_record.score << endl;
+    cout << "耗时                   " << current_game_record.game_time << endl;
+
+    cout << "----------游戏设置----------" << endl;
+    cout << (setting.use_random_seed ? " 随机" : " 固定") << " 种子: " << setting.seed << endl;
+    cout << " 蛇速度: " << setting.snack_speed << " 步/s" << endl;
+    cout << " 穿墙功能: " << (setting.allow_through_bound ? "开" : "关") << endl;
+    cout << " 穿自身功能: " << (setting.allow_through_body ? "开" : "关") << endl;
+    cout << " 食物同时存在数量: " << setting.food_quantity << " 个" << endl;
+    cout << "----------上榜情况----------" << endl;
+    //  判断是否上榜
+    bool need_to_record = stats.is_record_qualified(current_game_record);
+    // 上榜
+    if (need_to_record) {
+        cout << "恭喜上榜!!! 请输入游戏名: ";
+        current_game_record.name = get_a_string();              //  询问玩家名
+        stats.add_record(current_game_record);                  // 将游戏记录加入排行榜
+        int rank = stats.get_record_rank(current_game_record);  // 获取排名
+        cout << "已上传至对局排行榜, 位列第" << rank << "名" << endl;
+    }
+    // 未上榜
+    else
+        cout << "很可惜，没有上榜..." << endl;
+    // 询问是否再来一局
+    cout << "\n按 Enter键 再来一把    或    按 ESC键 退出至主菜单" << endl;
+    play_again = enter_or_esc();
 }
