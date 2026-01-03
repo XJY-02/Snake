@@ -99,8 +99,8 @@ string get_player_name() {
 
 // 返回当前时间字符串
 string get_current_time() {
-    time_t t = std::time(nullptr);
+    time_t t = time(nullptr);
     char buf[30];
-    strftime(buf, sizeof(buf), "%Y年%m月%d日 %H:%M", std::localtime(&t));
+    strftime(buf, sizeof(buf), "%Y年%m月%d日 %H:%M", localtime(&t));
     return string(buf);
 }

@@ -87,7 +87,7 @@ void Game::enter_menu() {
                 break;
             case 3:  // 进入排行榜
                 stats.print_record();
-                std::cout << "\n按 ESC 键返回..." << std::endl;
+                cout << "\n按 ESC 键返回..." << endl;
                 wait_esc();
                 break;
             default:
@@ -102,12 +102,12 @@ bool Game::game_start(GameBoard& gameboard, Snack& snack, Food& food) {
     auto time_begin = chrono::steady_clock ::now();
     Direction current_direction = Direction::right;
     chrono::steady_clock::time_point time_now;
-    std::chrono::duration<double> total_duration;
+    chrono::duration<double> total_duration;
 
     while (true) {
         // 计算游戏时间
         time_now = chrono::steady_clock::now();
-        total_duration = std::chrono::duration<double>(time_now - time_begin);
+        total_duration = chrono::duration<double>(time_now - time_begin);
         stats.current_game_time = (float)total_duration.count();
 
         // 打印界面

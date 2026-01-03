@@ -16,7 +16,7 @@ GameBoard::GameBoard(const int& map_size, const string& wall_shape, const string
     : map_size(map_size),
       wall_shape(wall_shape),
       ground_shape(ground_shape),
-      map(map_size, std::vector<Entity>(map_size, Entity::empty)) {}
+      map(map_size, vector<Entity>(map_size, Entity::empty)) {}
 
 // 清空面板
 void GameBoard::clean_board() {

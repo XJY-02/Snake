@@ -7,7 +7,7 @@
 using namespace std;
 
 // 生成新食物的随机坐标
-std::pair<int, int> Food::new_food_position(const Snack& snack) {
+pair<int, int> Food::new_food_position(const Snack& snack) {
     mt19937 gen(seed);                                    // 设置种子
     uniform_int_distribution<int> dist(0, map_size - 1);  // 设置随机范围
     while (true) {

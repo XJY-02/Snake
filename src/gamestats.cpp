@@ -27,7 +27,7 @@ void GameStats::ini_game_stats() {
 
 // records数组排序，第一条件为score降序，第二条件为time升序
 void GameStats::sort_records() {
-    std::sort(records.begin(), records.end(), [](const Record& a, const Record& b) {
+    sort(records.begin(), records.end(), [](const Record& a, const Record& b) {
         if (a.score != b.score) {
             return a.score > b.score;
         }
