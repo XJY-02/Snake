@@ -50,9 +50,11 @@ void GameBoard::merge_food(const Food& food) {
 void GameBoard::print(const Snack& snack, const Food& food, const GameStats& gamestats) {
     clean_board();  // 清空面板
 
-    merge_snack(snack);  // 将蛇放入
 
     merge_food(food);  // 将食物放入
+
+
+    merge_snack(snack);  // 将蛇放入
 
     // 上边界
     for (int i = 0; i < map_size + 2; i++) cout << WALL_SHAPE;
@@ -86,12 +88,14 @@ void GameBoard::print(const Snack& snack, const Food& food, const GameStats& gam
         }
         if (row == map_size / 2) {
             cout << "   当前得分: " << gamestats.current_score;
-        }
-        if (row == map_size / 2 + 1) {
+        } else if (row == map_size / 2 + 1) {
             cout << "   当前时长: " << fixed << setprecision(1) << gamestats.current_game_time;
+        } else if (row == map_size / 2 + 2) {
+            cout << "   当前食物数量: " << food.foods.size();
         }
         cout << endl;
     }
     // 下边界
     for (int i = 0; i < map_size + 2; i++) cout << WALL_SHAPE;
-};
+    cout << endl;
+}

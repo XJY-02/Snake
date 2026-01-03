@@ -13,9 +13,9 @@ class Game;
 enum class Entity : int;
 enum class Direction : int;  // 方向枚举
 
-#define SNACK_SHAPE "▓▓"
+#define SNACK_SHAPE "▒▒"
 #define SNACK_HEAD_SHAPE "██"
-#define SNACK_TAIL_SHAPE "▒▒"
+#define SNACK_TAIL_SHAPE "▓▓"
 
 // 蛇
 class Snack {

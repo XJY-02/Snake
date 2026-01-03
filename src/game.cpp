@@ -70,11 +70,13 @@ void Game::enter_menu() {
                     stats.ini_game_stats();
 
                     // 游戏开始
-                    game_start(gameboard, snack, food);
+                    bool normal_exit = game_start(gameboard, snack, food);
 
                     // 游戏结束
-                    game_over();
-
+                    if (normal_exit)
+                        game_over();
+                    else
+                        break;
                 } while (play_again);  // 再来一把
 
                 break;
@@ -94,7 +96,7 @@ void Game::enter_menu() {
 }
 
 // 游戏对局主逻辑
-void Game::game_start(GameBoard& gameboard, Snack& snack, Food& food) {
+bool Game::game_start(GameBoard& gameboard, Snack& snack, Food& food) {
     // 记录时间初始化
     auto time_begin = chrono::steady_clock ::now();
     Direction current_direction = Direction::right;
@@ -111,7 +113,7 @@ void Game::game_start(GameBoard& gameboard, Snack& snack, Food& food) {
         clearScreen();
         gameboard.print(snack, food, stats);
 
-        // 判断是否填满
+        // 判断蛇是否填满地图
         bool full = true;
         for (auto row : gameboard.map) {
             for (auto cell : row) {
@@ -133,6 +135,9 @@ void Game::game_start(GameBoard& gameboard, Snack& snack, Food& food) {
         if (_kbhit()) {      // 检查是否有按键
             key = _getch();  // 获取按键（不等待）
             switch (key) {
+                case 27:
+                    // ESC提前退出
+                    return false;
                 case 'w':
                 case 'W':
                     if (current_direction != Direction::down) {
@@ -163,7 +168,6 @@ void Game::game_start(GameBoard& gameboard, Snack& snack, Food& food) {
         }
 
         // 数据处理
-
         // 获得新头位置,未开启穿墙则穿墙时越界
         pair<int, int> new_head_position = snack.get_new_head_position(current_direction);
 
@@ -183,20 +187,35 @@ void Game::game_start(GameBoard& gameboard, Snack& snack, Food& food) {
         }
 
         if (snack_alive) {  // 蛇存活
-            bool eat_food = false;
-            // 检查是否吃到食物
-            for (int i = 0; i < (int)food.foods.size(); i++) {
-                if (food.foods[i] == new_head_position) {
-                    eat_food = true;
+            bool grow_sign = false;
+            int i;  // 检查第i个食物是否被吃
+            for (i = 0; i < (int)food.foods.size(); i++) {
+                if (food.foods[i] == new_head_position) {  // 食物被吃
+                    grow_sign = true;
                     stats.current_score++;
-                    food.renew_food_i(snack, i);
+
+                    // 判断是否有空位生成食物
+                    bool have_empty = false;
+                    for (auto& row : gameboard.map) {
+                        for (auto& cell : row) {
+                            if (cell == Entity::empty) {
+                                have_empty = true;
+                                break;
+                            }
+                        }
+                        if (have_empty) break;
+                    }
+                    if (have_empty)                                // 有空位
+                        food.renew_food_i(snack, i);               // 让第i个食物换位置生成
+                    else                                           // 没空位
+                        food.foods.erase(food.foods.begin() + i);  // 删除第i个食物
+
+
                     break;
                 }
             }
-            // 移动
-            snack.move_and_may_grow(new_head_position, eat_food);
-
-
+            // 移动并成长
+            snack.move_and_may_grow(new_head_position, grow_sign);
         } else {  // 蛇死亡
             cout << "\n--------游戏结束--------\n" << endl;
             break;
@@ -205,13 +224,14 @@ void Game::game_start(GameBoard& gameboard, Snack& snack, Food& food) {
         int milliseconds_to_nesize_txt_print = 1000 / snack.speed;
         this_thread::sleep_for(chrono::milliseconds(milliseconds_to_nesize_txt_print));
     }
-    // 等待3s
-    this_thread::sleep_for(chrono::seconds(3));
+    this_thread::sleep_for(chrono::seconds(2));  // 等待3s
+    return true;
 }
 
 
 // 游戏对局结束
 void Game::game_over() {
+    clearScreen();
     // 生成本局记录
     Record current_game_record = {"Unknown", stats.current_score, stats.current_game_time, stats.game_start_time};
 
@@ -222,6 +242,7 @@ void Game::game_over() {
 
     cout << "----------游戏设置----------" << endl;
     cout << (setting.use_random_seed ? " 随机" : " 固定") << " 种子: " << setting.seed << endl;
+    cout << " 地图大小: " << setting.map_size << "×" << setting.map_size << endl;
     cout << " 蛇速度: " << setting.snack_speed << endl;
     cout << " 穿墙功能: " << (setting.allow_through_bound ? "开" : "关") << endl;
     cout << " 穿身体: " << (setting.allow_through_body ? "开" : "关") << endl;

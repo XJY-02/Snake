@@ -2,7 +2,9 @@
 
 #include <limits.h>
 
+#include <chrono>
 #include <iostream>
+#include <thread>
 
 #include "Input.h"
 using namespace std;
@@ -17,7 +19,8 @@ void GameSetting::change_setting() {
         cout << "2.速度:  " << snack_speed << endl;
         cout << "3.穿墙: " << (allow_through_bound ? "√" : "×") << endl;
         cout << "4.穿身体: " << (allow_through_body ? "√" : "×") << endl;
-        cout << "5.食物同时存在个数: " << food_quantity << "个" << endl;
+        cout << "5.食物同时存在个数: " << food_quantity << "个"
+             << (food_quantity == map_size * map_size - 3 ? " (MAX)" : "") << endl;
         cout << "6.是否使用随机种子进行游戏: " << (use_random_seed ? "√" : "×") << endl;
         if (!use_random_seed) {
             cout << "7.固定种子:  " << seed << endl;
@@ -64,6 +67,9 @@ void GameSetting::set_map_size() {
     cout << "更改地图边长为(最小为4): ";
     int answer = input_a_int(4, INT_MAX);
     map_size = answer;
+    if (food_quantity > map_size * map_size - 3) {
+        food_quantity = map_size * map_size - 3;
+    }
 };
 
 void GameSetting::set_snack_speed() {
@@ -73,15 +79,17 @@ void GameSetting::set_snack_speed() {
 };
 
 void GameSetting::set_allow_through_bound() {
-    if (!allow_through_bound && allow_through_body) {
-        cout << "穿墙与穿身体不能同时启用!" << endl;
-    } else
-        allow_through_bound = !allow_through_bound;
+    // if (!allow_through_bound && allow_through_body) {
+    //     cout << "穿墙与穿身体不能同时启用!" << endl;
+    //     this_thread::sleep_for(chrono::seconds(1));
+    // } else
+    allow_through_bound = !allow_through_bound;
 };
 
 void GameSetting::set_allow_through_body() {
     if (allow_through_bound && !allow_through_body) {
         cout << "穿墙与穿身体不能同时启用!" << endl;
+        this_thread::sleep_for(chrono::seconds(1));
     } else
         allow_through_body = !allow_through_body;
 };
@@ -89,6 +97,9 @@ void GameSetting::set_allow_through_body() {
 void GameSetting::set_food_quantity() {
     cout << "更改食物同时存在数量为(最小为1): ";
     int answer = input_a_int(1, INT_MAX);
+    if (answer > map_size * map_size - 3) {
+        answer = map_size * map_size - 3;
+    }
     food_quantity = answer;
 };
 

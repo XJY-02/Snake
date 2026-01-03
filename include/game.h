@@ -21,7 +21,7 @@ class Game {
     void print_menu();
 
     // 游戏对局主逻辑
-    void game_start(GameBoard& gameboard, Snack& snack, Food& food);
+    bool game_start(GameBoard& gameboard, Snack& snack, Food& food);
 
     // 游戏对局结束
     void game_over();
