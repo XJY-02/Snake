@@ -54,18 +54,16 @@ bool GameStats::is_record_qualified(const Record& record) {
         return true;
     }
     // 无空闲记录位置, records.size() == RECORDS_LENTH
-    else {
-        if (record.score > records[RECORDS_LENTH - 1].score) {  // 分比最后一名高
-            records.erase(records.begin() + RECORDS_LENTH - 1);
-            return true;
-        } else if (record.score == records[RECORDS_LENTH - 1].score) {    // 分和最后一名一样
-            if (record.game_time < records[RECORDS_LENTH - 1].game_time)  // 对局用时更短  {
-                records.erase(records.begin() + RECORDS_LENTH - 1);
-            return true;
-        } else  // 分比最后一名低，不记录
-            return false;
-    }
-    return false;
+    else if (record.score > records[RECORDS_LENTH - 1].score) {  // 分比最后一名高
+        records.erase(records.begin() + RECORDS_LENTH - 1);
+        return true;
+    } else if (record.score == records[RECORDS_LENTH - 1].score &&
+               record.game_time < records[RECORDS_LENTH - 1].game_time) {
+        // 分和最后一名一样，对局用时更短
+        records.erase(records.begin() + RECORDS_LENTH - 1);
+        return true;
+    } else  // 分比最后一名低，不记录
+        return false;
 }
 
 
