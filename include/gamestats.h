@@ -4,7 +4,7 @@
 #include <string>
 #include <vector>
 
-#define RECORDS_LENTH 10
+#define RECORDS_LENTH 3
 
 // 排行榜记录结构体
 struct Record {
@@ -35,8 +35,6 @@ class GameStats {
     // 初始化对局统计信息
     void ini_game_stats();
 
-    // 返回本局游戏记录
-    const Record get_current_game_record();
 
     // 判断对局是否上榜(是否需要记录)
     bool is_record_qualified(const Record& record);

@@ -12,7 +12,6 @@ using namespace std;
 int input_a_int(const int& low, const int& high) {
     int answer;
     while (true) {
-        cout << "请选择: ";
         // 读取失败
         if (!(cin >> answer)) {
             cout << "无效输入" << endl;
@@ -63,9 +62,30 @@ bool enter_or_esc() {
 }
 
 // 接收一行字符串
-string get_a_string() {
+string get_player_name() {
     string str;
-    getline(cin, str);  // 读取整行,包含空格,读取并丢弃最后的换行符，不会留在缓冲区
+    bool valid = false;
+    while (!valid) {
+        cout << "请输入玩家名: " << endl;
+        getline(cin, str);  // 读取整行,包含空格,读取并丢弃最后的换行符，不会留在缓冲区
+        for (char ch : str) {
+            if (ch >= 'a' && ch <= 'z') {
+                valid = true;
+            } else if (ch >= '0' && ch <= '9') {
+                valid = true;
+            } else if (ch == '_') {
+                valid = true;
+            } else {
+                valid = false;
+                break;
+            }
+        }
+        if (!valid) {
+            cout << "只能包含字母、数字、下划线" << endl;
+        }
+    }
+
+
     return str;
 }
 

@@ -86,10 +86,14 @@ void GameBoard::print(const Snack& snack, const Food& food, const GameStats& gam
                 }
             }
         }
-        if (row == map_size / 2) {
+        if (row == map_size / 2 - 2) {
+            cout << "   操作方法: " << "W上 S下 A左 D右";
+        } else if (row == map_size / 2 - 1) {
             cout << "   当前得分: " << gamestats.current_score;
-        } else if (row == map_size / 2 + 1) {
+        } else if (row == map_size / 2) {
             cout << "   当前时长: " << fixed << setprecision(1) << gamestats.current_game_time << "s";
+        } else if (row == map_size / 2 + 2) {
+            cout << "   按 ESC键 退出至主菜单";
         }
         cout << endl;
     }

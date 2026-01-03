@@ -37,9 +37,6 @@ class GameBoard {
     // 将食物加入游戏版
     void merge_food(const Food& food);
 
-    // 判断是否已经占满
-    bool is_full(const Snack& snack);
-
     // 显示游戏版
     void print(const Snack& snack, const Food& food, const GameStats& gamestats);
 

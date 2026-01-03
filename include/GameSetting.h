@@ -3,6 +3,14 @@
 
 #include <string>
 class Game;
+#define INI_MAP_SIZE 20
+#define INI_SPEED 50
+#define INI_THROUGH_WALL true
+#define INI_THROUGH_BODY false
+#define INI_FOOD_QUANTITY 3
+#define INI_USE_RANDOM_SEED false
+#define INI_SEED 114514
+
 
 // 游戏实例
 class GameSetting {
@@ -16,13 +24,13 @@ class GameSetting {
     int seed;                  // 固定种子
 
     GameSetting()
-        : map_size(20),
-          snack_speed(70),
-          allow_through_bound(true),
-          allow_through_body(false),
-          food_quantity(1),
-          use_random_seed(true),
-          seed(0) {}
+        : map_size(INI_MAP_SIZE),
+          snack_speed(INI_SPEED),
+          allow_through_bound(INI_THROUGH_WALL),
+          allow_through_body(INI_THROUGH_BODY),
+          food_quantity(INI_FOOD_QUANTITY),
+          use_random_seed(INI_USE_RANDOM_SEED),
+          seed(INI_SEED) {}
 
     // 修改设置
     void set_map_size();

@@ -25,7 +25,8 @@ void Game::print_menu() {
          << "     2.设置\n"
          << "     3.对局排行榜\n"
          << "\n     0.退出\n"
-         << "----------------------\n";
+         << "----------------------\n"
+         << "请选择: ";
 }
 
 
@@ -224,7 +225,8 @@ bool Game::game_start(GameBoard& gameboard, Snack& snack, Food& food) {
         int milliseconds_to_nesize_txt_print = 1000 / snack.speed;
         this_thread::sleep_for(chrono::milliseconds(milliseconds_to_nesize_txt_print));
     }
-    this_thread::sleep_for(chrono::seconds(2));  // 等待3s
+    cout << "按 Enter键 继续..." << endl;
+    wait_enter();
     return true;
 }
 
@@ -237,31 +239,38 @@ void Game::game_over() {
 
     // 展示对局信息
     cout << "--------对局信息汇总--------" << endl;
-    cout << "得分                   " << current_game_record.score << endl;
-    cout << "耗时                   " << fixed << setprecision(1) << current_game_record.game_time << "s" << endl;
+    cout << " 得分                  " << current_game_record.score << endl;
+    cout << " 耗时                  " << fixed << setprecision(1) << current_game_record.game_time << "s" << endl;
 
-    cout << "----------游戏设置----------" << endl;
+    cout << "\n----------游戏设置----------" << endl;
     cout << (setting.use_random_seed ? " 随机" : " 固定") << " 种子: " << setting.seed << endl;
     cout << " 地图大小: " << setting.map_size << "×" << setting.map_size << endl;
     cout << " 蛇速度: " << setting.snack_speed << endl;
     cout << " 穿墙功能: " << (setting.allow_through_bound ? "开" : "关") << endl;
     cout << " 穿身体: " << (setting.allow_through_body ? "开" : "关") << endl;
     cout << " 食物同时存在数量: " << setting.food_quantity << " 个" << endl;
-    cout << "----------上榜情况----------" << endl;
+    cout << "\n----------上榜情况----------" << endl;
     //  判断是否上榜
     bool need_to_record = stats.is_record_qualified(current_game_record);
     // 上榜
     if (need_to_record) {
-        cout << "恭喜上榜!!! 请输入游戏名: ";
-        current_game_record.name = get_a_string();              //  询问玩家名
+        cout << " 恭喜上榜!!!" << endl;
+        current_game_record.name = get_player_name();
         stats.add_record(current_game_record);                  // 将游戏记录加入排行榜
         int rank = stats.get_record_rank(current_game_record);  // 获取排名
         cout << "已上传至对局排行榜, 位列第" << rank << "名" << endl;
     }
     // 未上榜
-    else
-        cout << "很可惜，没有上榜..." << endl;
+    else {
+        cout << " 很可惜，没有上榜..." << endl;
+    }
+    cout << endl;
+
+    // 展示排行榜
+    stats.print_record();
+
     // 询问是否再来一局
-    cout << "\n按 Enter键 再来一把    或    按 ESC键 退出至主菜单" << endl;
+    cout << " \n 按 Enter键 再来一把" << endl;
+    cout << " 按 ESC键   退出至主菜单" << endl;
     play_again = enter_or_esc();
 }

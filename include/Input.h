@@ -19,7 +19,7 @@ void wait_enter();
 bool enter_or_esc();
 
 // 接收一行字符串
-std::string get_a_string();
+std::string get_player_name();
 
 // 返回当前时间字符串
 std::string get_current_time();

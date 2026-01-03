@@ -1,7 +1,7 @@
 #include "GameStats.h"
 
 #include <algorithm>
-#include <iomanip>  
+#include <iomanip>
 #include <iostream>
 #include <string>
 
@@ -56,10 +56,12 @@ bool GameStats::is_record_qualified(const Record& record) {
     // 无空闲记录位置, records.size() == RECORDS_LENTH
     else {
         if (record.score > records[RECORDS_LENTH - 1].score) {  // 分比最后一名高
+            records.erase(records.begin() + RECORDS_LENTH - 1);
             return true;
         } else if (record.score == records[RECORDS_LENTH - 1].score) {    // 分和最后一名一样
             if (record.game_time < records[RECORDS_LENTH - 1].game_time)  // 对局用时更短  {
-                return true;
+                records.erase(records.begin() + RECORDS_LENTH - 1);
+            return true;
         } else  // 分比最后一名低，不记录
             return false;
     }
@@ -76,11 +78,12 @@ void GameStats::add_record(const Record& record) {
 
 // 输出记录
 void GameStats::print_record() const {
-    cout << "--------------------------------排行榜--------------------------------" << endl;
+    cout << "--------------------------------排行榜----------------------------------------------" << endl;
     cout << "排名\t\t名字\t\t得分\t\t时间\t\t日期" << endl;
     int rank = 1;
     for (Record record : records) {
         cout << rank++ << "\t\t" << record.name << "\t\t" << record.score << "\t\t" << fixed << setprecision(1)
              << record.game_time << "s\t\t" << record.date_time << endl;
     }
+    cout << "------------------------------------------------------------------------------------" << endl;
 }
