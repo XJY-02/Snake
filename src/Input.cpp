@@ -65,10 +65,13 @@ bool enter_or_esc() {
 string get_player_name() {
     string str;
     bool valid = false;
-    while (!valid) {
+    int len;
+    while (true) {
         cout << "请输入玩家名: " << endl;
         getline(cin, str);  // 读取整行,包含空格,读取并丢弃最后的换行符，不会留在缓冲区
+        len = 0;
         for (char ch : str) {
+            len++;
             if (ch >= 'a' && ch <= 'z') {
                 valid = true;
             } else if (ch >= '0' && ch <= '9') {
@@ -81,8 +84,13 @@ string get_player_name() {
             }
         }
         if (!valid) {
-            cout << "只能包含字母、数字、下划线" << endl;
+            cout << " 只能包含字母、数字、下划线" << endl;
+            continue;
+        } else if (len > 6) {
+            cout << " 长度不能大于6个字符" << endl;
+            continue;
         }
+        break;
     }
 
 
