@@ -89,9 +89,7 @@ void GameBoard::print(const Snack& snack, const Food& food, const GameStats& gam
         if (row == map_size / 2) {
             cout << "   当前得分: " << gamestats.current_score;
         } else if (row == map_size / 2 + 1) {
-            cout << "   当前时长: " << fixed << setprecision(1) << gamestats.current_game_time;
-        } else if (row == map_size / 2 + 2) {
-            cout << "   当前食物数量: " << food.foods.size();
+            cout << "   当前时长: " << fixed << setprecision(1) << gamestats.current_game_time << "s";
         }
         cout << endl;
     }

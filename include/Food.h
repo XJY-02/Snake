@@ -26,7 +26,7 @@ class Food {
 
     // 构造函数
     Food(const Snack& snack, int map_size, const std::string& shape, int food_quantity, int seed)
-        : map_size(map_size), shape(shape), foods(food_quantity, std::pair<int, int>()), seed(seed) {
+        : map_size(map_size), shape(shape), foods(food_quantity, std::pair<int, int>(-1, -1)), seed(seed) {
         for (auto& food : foods) {
             food = new_food_position(snack);
         }
